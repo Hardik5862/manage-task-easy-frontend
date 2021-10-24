@@ -1,10 +1,11 @@
 import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
 import AuthForm from "./form";
-import Header from "./header";
+import Header from "../ui/header";
+import ErrorMessage from "../ui/error-message";
 
 const Signin = () => {
-  const handleSubmit = (e, username, password) => {
+  const handleSubmit = async (e, username, password) => {
     e.preventDefault();
     console.log("submit signin", username, password);
   };
@@ -17,6 +18,7 @@ const Signin = () => {
         New user? <Link to="/signup">Sign Up!</Link>
       </p>
       <AuthForm handleSubmit={handleSubmit} />
+      <ErrorMessage message="not available signin" />
     </FormContainer>
   );
 };

@@ -1,11 +1,23 @@
 import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
 import AuthForm from "./form";
-import Header from "./header";
+import Header from "../ui/header";
+import ErrorMessage from "../ui/error-message";
 
 const Signup = () => {
-  const handleSubmit = (e, username, password) => {
+  const handleSubmit = async (e, username, password) => {
     e.preventDefault();
+    try {
+      await fetch(`${process.env.REACT_APP_API_URL}/auth/signup`, {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (err) {
+      console.log("error caught", err);
+    }
     console.log("submit signup", username, password);
   };
 
@@ -17,6 +29,7 @@ const Signup = () => {
         Already have an account? <Link to="/signin">Sign In!</Link>
       </p>
       <AuthForm handleSubmit={handleSubmit} />
+      <ErrorMessage message="not available" />
     </FormContainer>
   );
 };
