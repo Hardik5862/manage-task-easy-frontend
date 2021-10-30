@@ -9,7 +9,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
 
-const AuthForm = ({ handleSubmit }) => {
+const AuthForm = ({ handleSubmit, loading }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -58,7 +58,12 @@ const AuthForm = ({ handleSubmit }) => {
           label="Password"
         />
       </FormControl>
-      <Button sx={{ m: 1 }} variant="contained" type="submit">
+      <Button
+        sx={{ m: 1 }}
+        variant="contained"
+        disabled={loading}
+        type="submit"
+      >
         Submit
       </Button>
     </FormContainer>

@@ -1,5 +1,3 @@
-import ReactDOM from "react-dom";
-
 import { styled } from "@mui/system";
 
 const ErrorMessage = ({ message }) => {
@@ -8,15 +6,14 @@ const ErrorMessage = ({ message }) => {
       <li key={idx}>{constraint}</li>
     ));
 
-    return <ul>{constraints}</ul>;
+    return <ErrorListContainer>{constraints}</ErrorListContainer>;
   };
 
-  return ReactDOM.createPortal(
+  return (
     <ErrorContainer>
       <h1>Oops!</h1>
       {Array.isArray(message) ? messages(message) : <p>{message}</p>}
-    </ErrorContainer>,
-    document.getElementById("notifications")
+    </ErrorContainer>
   );
 };
 
@@ -33,6 +30,10 @@ const ErrorContainer = styled("div")(({ theme }) => ({
   "& h1": {
     fontSize: "18px",
   },
+}));
+
+const ErrorListContainer = styled("ul")(({ theme }) => ({
+  listStyleType: "none",
 }));
 
 export default ErrorMessage;

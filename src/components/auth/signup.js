@@ -1,24 +1,51 @@
+import { useState } from "react";
+import { useHistory, Link } from "react-router-dom";
 import { styled } from "@mui/system";
-import { Link } from "react-router-dom";
 import AuthForm from "./form";
 import Header from "../ui/header";
 import ErrorMessage from "../ui/error-message";
 
 const Signup = () => {
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
+
   const handleSubmit = async (e, username, password) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+    const urlencoded = new URLSearchParams();
+    urlencoded.append("username", username);
+    urlencoded.append("password", password);
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: "follow",
+    };
+
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/auth/signup`, {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    } catch (err) {
-      console.log("error caught", err);
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/auth/signup`,
+        requestOptions
+      );
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw data;
+      }
+
+      history.push("/");
+    } catch (error) {
+      console.log("Error", error);
+      setError(error.message || "Something went wrong");
     }
-    console.log("submit signup", username, password);
+    setLoading(false);
   };
 
   return (
@@ -26,10 +53,10 @@ const Signup = () => {
       <Header />
       <SubHeader>CREATE NEW ACCOUNT</SubHeader>
       <p>
-        Already have an account? <Link to="/signin">Sign In!</Link>
+        Already have an account? <Link to="/">Sign In!</Link>
       </p>
-      <AuthForm handleSubmit={handleSubmit} />
-      <ErrorMessage message="not available" />
+      <AuthForm handleSubmit={handleSubmit} loading={loading} />
+      {error && <ErrorMessage message={error} />}
     </FormContainer>
   );
 };
