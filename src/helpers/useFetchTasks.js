@@ -10,10 +10,10 @@ export const useFetch = (options) => {
       setLoading(true);
       setError(null);
 
-      const statusStr = status.length > 0 ? `?status=${status}` : "";
-      const searchStr = search.length > 0 ? `&search=${search}` : "";
+      const statusStr = status.length > 0 ? `status=${status}&` : "";
+      const searchStr = search.length > 0 ? `search=${search}` : "";
 
-      const url = `${process.env.REACT_APP_API_URL}/tasks${statusStr}${searchStr}`;
+      const url = `${process.env.REACT_APP_API_URL}/tasks?${statusStr}${searchStr}`;
 
       try {
         const response = await fetch(url, options);

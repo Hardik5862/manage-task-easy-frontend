@@ -1,13 +1,17 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { styled } from "@mui/system";
-import Header from "../ui/header";
 import ErrorMessage from "../ui/error-message";
 import { getAuthToken } from "../../helpers/auth";
 import TasksList from "./tasks-list";
 import { useFetch } from "../../helpers/useFetchTasks";
+import TasksFilter from "./tasks-filter";
+import Navbar from "../ui/navbar";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const TasksPage = () => {
+  const history = useHistory();
   const token = getAuthToken();
 
   const myHeaders = new Headers();
@@ -27,25 +31,43 @@ const TasksPage = () => {
   }, []);
 
   return (
-    <MainContainer>
-      <Header />
-      {!loading && !error && <TasksList tasks={data} />}
-      {error && <ErrorMessage message={error} />}
-      {error && (
-        <p>
-          Try signing in again! <Link to="/">sign in</Link>
-        </p>
-      )}
-    </MainContainer>
+    <>
+      <Navbar>
+        <Button onClick={() => history.push("/tasks/new")}>Add new task</Button>
+      </Navbar>
+      <MainContainer>
+        <TasksFilter filterTasks={fetchData} loading={loading} />
+        {!loading && !error && data && <TasksList tasks={data} />}
+        {loading && (
+          <Container>
+            <CircularProgress />
+          </Container>
+        )}
+        {error && <ErrorMessage message={error} />}
+        {error && (
+          <Container>
+            <span>
+              Try signing in again! <Link to="/">sign in</Link>
+            </span>
+          </Container>
+        )}
+      </MainContainer>
+    </>
   );
 };
 
 const MainContainer = styled("div")(({ theme }) => ({
   width: "100vw",
-  height: "100vh",
   display: "flex",
   alignItems: "center",
   flexDirection: "column",
+}));
+
+const Container = styled("div")(({ theme }) => ({
+  height: "50vw",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
 }));
 
 export default TasksPage;

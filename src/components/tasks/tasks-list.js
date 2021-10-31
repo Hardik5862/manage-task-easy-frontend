@@ -1,18 +1,24 @@
 import { styled } from "@mui/system";
-import { useEffect } from "react";
+import Grid from "@mui/material/Grid";
+import Task from "./task";
 
 const TasksList = ({ tasks }) => {
-  useEffect(() => {
-    console.log("TasksList: useEffect", tasks);
-  }, [tasks]);
-
-  return <MainContainer></MainContainer>;
+  console.log(tasks);
+  return (
+    <TasksListContainer container justifyContent="center" spacing={3}>
+      {tasks &&
+        tasks.map((task) => (
+          <Grid item key={task.id}>
+            <Task task={task} />
+          </Grid>
+        ))}
+    </TasksListContainer>
+  );
 };
 
-const MainContainer = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  flexDirection: "column",
-}));
+const TasksListContainer = styled(Grid)({
+  margin: "10px",
+  maxWidth: "90vw",
+});
 
 export default TasksList;
